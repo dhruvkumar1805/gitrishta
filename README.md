@@ -2,7 +2,13 @@
 
 apna GitHub soulmate dhoondo.
 
-Type a GitHub username and Pandit ji reads your public profile, makes your rishta biodata, matches your kundli against well-known developers and prints the shaadi ka card.
+Type a GitHub username and Pandit ji reads your public profile, makes your rishta biodata and looks for your rishta in three places:
+
+1. **Your GitHub circle**: people who follow you back first, then people you follow.
+2. **The rishta pool**: everyone who has made a biodata and opted in.
+3. **Celebrities**: a snapshot of well-known developers.
+
+The best kundli match gets a shaadi ka card. There's a Desi mode (Hinglish) and an English mode.
 
 **Live:** https://dhruvkumar.dev/gitrishta
 
@@ -10,7 +16,7 @@ Type a GitHub username and Pandit ji reads your public profile, makes your risht
 
 ## What it reads
 
-Everything comes from the public GitHub API, in your browser. Nothing is stored or sent anywhere else.
+Everything comes from the public GitHub API, in your browser. If you keep "add me to the rishta pool" ticked, a few numbers derived from your public profile (stars, repo count, top languages, the hour you commit most) are kept so other people can match with you. Untick it, or use "remove me from the pool" anytime.
 
 | Biodata field | Comes from |
 | --- | --- |

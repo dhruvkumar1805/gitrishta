@@ -9,19 +9,19 @@ const ON_WEB = location.protocol.startsWith('http');
 const SITE = ON_WEB
   ? location.host.replace(/^www\./, '') + location.pathname.replace(/index\.html$/, '').replace(/\/$/, '')
   : 'dhruvkumar.dev/gitrishta';
-const CIRCLE_MAX = 18;
+const CIRCLE_MAX = 14;
+const SEARCH_MAX = 10;
 const $ = id => document.getElementById(id);
 
 const SNAP = {};
 (window.FAMOUS || []).forEach(s => { SNAP[s.user.login.toLowerCase()] = s; });
 
-/* ---------- language: desi by default in India, English elsewhere ---------- */
+/* ---------- language: English for everyone, Hinglish "Desi" mode one tap away ---------- */
 function detectLang() {
   const q = new URLSearchParams(location.search).get('lang');
   if (q === 'en' || q === 'desi') return q;
   try { const s = localStorage.getItem('gr-lang'); if (s === 'en' || s === 'desi') return s; } catch (e) {}
-  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
-  return /Kolkata|Calcutta/.test(tz) ? 'desi' : 'en';
+  return 'en';
 }
 let LANG = detectLang();
 const T = (desi, en) => (LANG === 'en' ? en : desi);
@@ -194,7 +194,41 @@ async function loadCircle(a, onProgress) {
     seen.add(k); picks.push(p);
     if (picks.length >= CIRCLE_MAX) break;
   }
+  const out = await analyzePeople(picks, onProgress);
+  sessionSet(key, out.map(toCompact));
+  return out;
+}
 
+// GitHub-wide: developers who share your top language (and country, when you list one) with a
+// follower count in your league, so the match is a peer, not a celebrity.
+const NOT_A_STACK = new Set(['Makefile', 'Dockerfile', 'HTML', 'CSS', 'Shell', 'Batchfile', 'PowerShell', 'CMake', 'Roff', 'TeX', 'Nix', 'Procfile']);
+const searchLang = a => a.langs.find(l => !NOT_A_STACK.has(l)) || a.langs[0];
+
+async function loadSearch(a, skip, onProgress) {
+  const lang = searchLang(a);
+  if (!lang) return [];
+  const key = 'gr-search-' + a.login.toLowerCase();
+  const hit = sessionGet(key);
+  if (hit) return hit.map(fromCompact);
+  const place = (a.location || '').split(',').pop().trim().replace(/[^\w\s.-]/g, '');
+  const lo = Math.max(1, Math.floor(a.followers / 4)), hi = Math.max(60, a.followers * 4);
+  const query = where => [`language:"${lang}"`, where ? `location:"${where}"` : '', `followers:${lo}..${hi}`, 'repos:>4', 'type:user'].filter(Boolean).join(' ');
+  const search = async where => (await gh(`/search/users?q=${encodeURIComponent(query(where))}&per_page=40`)).items || [];
+  let found = [];
+  try {
+    found = place ? await search(place) : [];
+    if (found.length < 8) found = found.concat(await search('')); // too local or no location: go worldwide
+  } catch (e) { if (!found.length) return []; }
+  const me = a.login.toLowerCase();
+  const seen = new Set([me, ...skip]);
+  const picks = found.filter(p => { const k = p.login.toLowerCase(); if (seen.has(k)) return false; seen.add(k); return true; }).slice(0, SEARCH_MAX);
+  const out = await analyzePeople(picks, onProgress);
+  sessionSet(key, out.map(toCompact));
+  return out;
+}
+
+// One repos call per person; famous devs come straight from the snapshot. Stops early on rate limit.
+async function analyzePeople(picks, onProgress) {
   const out = [];
   let done = 0, limited = false, next = 0;
   const work = async p => {
@@ -218,7 +252,6 @@ async function loadCircle(a, onProgress) {
   await Promise.all(Array.from({ length: Math.min(6, picks.length) }, async () => {
     while (next < picks.length) await work(picks[next++]);
   }));
-  sessionSet(key, out.map(toCompact));
   return out;
 }
 
@@ -278,14 +311,15 @@ function verdict(total) {
   return ['bad', T('Pandit ji ne mana kiya', 'Pandit ji said no'), T('merge conflict. dono branch alag rakho', 'merge conflict. keep the branches apart')];
 }
 
-const SRC_RANK = { circle: 0, pool: 1, famous: 2, manual: 3 };
+const SRC_RANK = { circle: 0, github: 1, pool: 2, famous: 3, manual: 4 };
 const byScore = (x, y) => y.total - x.total || SRC_RANK[x.src] - SRC_RANK[y.src] || (y.other.followers || 0) - (x.other.followers || 0);
 
-function candidates(a, circle, pool) {
+function candidates(a, circle, search, pool) {
   const me = a.login.toLowerCase();
   const map = new Map();
   const add = (d, src) => { const k = d.login.toLowerCase(); if (k !== me && !map.has(k)) map.set(k, { other: d, src }); };
   circle.forEach(d => add(d, 'circle'));
+  search.forEach(d => add(d, 'github'));
   pool.forEach(d => add(d, 'pool'));
   famousList().forEach(d => add(d, 'famous'));
   return [...map.values()].map(c => ({ ...c, total: kundli(a, c.other).total })).sort(byScore);
@@ -518,16 +552,17 @@ function kundliCard(a, b) {
   return { card, total };
 }
 
-function kicker(total, src) {
+function kicker(total, src, a) {
   if (total < 18) return T('Pandit ji ne bahut dhoondha. Yahi mila. Adjust kar lena', 'Pandit ji searched everywhere. This is the best he found. Adjust.');
   if (src === 'circle') return T('Tumhare apne GitHub circle se rishta aaya hai', 'A rishta from your own GitHub circle');
+  if (src === 'github') return T(`Pandit ji ne poore GitHub pe ${searchLang(a)} wale dhoondhe. Ye mile`, `Pandit ji searched all of GitHub for ${searchLang(a)} devs like you`);
   if (src === 'pool') return T(`gitrishta ke ${num(poolCount)} developers mein se, Pandit ji ki pasand`, `Pandit ji's pick from ${num(poolCount)} developers on gitrishta`);
   return T('Pandit ji ki bhavishyavani ke anusaar, aapko sadar amantrit kiya jaata hai', 'As foretold by Pandit ji, you are cordially invited');
 }
 
 function weddingCard(a, b, total, src) {
   const { card, frame } = frameShell('wcard');
-  frame.append(el('div', 'kicker', kicker(total, src)));
+  frame.append(el('div', 'kicker', kicker(total, src, a)));
   const row = el('div', 'wrow');
   const av = p => { const d = el('div', 'av'); d.append(avatar(p.avatar, 240)); return d; };
   const mid = el('div');
@@ -561,7 +596,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 async function reveal(stage, pool, winner, src) {
   const box = el('div', 'reveal');
   box.append(el('div', 'rv-t', T(`Pandit ji ${num(pool.length)} developers ki kundli mila rahe hain`, `Pandit ji is matching you with ${num(pool.length)} developers`)),
-    el('div', 'rv-s', T('tumhara circle · rishta pool · celebrities', 'your circle · the rishta pool · celebrities')));
+    el('div', 'rv-s', T('tumhara circle · poora GitHub · rishta pool · celebrities', 'your circle · all of GitHub · the rishta pool · celebrities')));
   const ring = el('div', 'ring'); const img = avatar(winner.avatar, 200); ring.append(img);
   const nm = el('b'); box.append(ring, nm);
   stage.innerHTML = ''; stage.append(box);
@@ -580,6 +615,7 @@ async function reveal(stage, pool, winner, src) {
   nm.textContent = winner.name;
   box.querySelector('.rv-t').textContent = T('Rishta mil gaya!', 'Rishta found!');
   box.querySelector('.rv-s').textContent = src === 'circle' ? T('tumhare apne circle se', 'from your own circle')
+    : src === 'github' ? T('poore GitHub mein se', 'found across all of GitHub')
     : src === 'pool' ? T('rishta pool se', 'from the rishta pool') : T('celebrity rishta', 'a celebrity rishta');
   box.classList.add('won');
   await sleep(1000);
@@ -744,6 +780,7 @@ function moreSection(a, cands, current) {
     return btn;
   };
   [['circle', T('Tumhare circle se rishte', 'Rishtas from your circle')],
+   ['github', T('Poore GitHub se', 'From all of GitHub')],
    ['pool', T('Rishta pool se', 'From the rishta pool')],
    ['famous', T('Celebrity rishte', 'Celebrity rishtas')]].forEach(([src, title]) => {
     const list = cands.filter(c => c.src === src && c.other.login !== current).slice(0, 10);
@@ -777,6 +814,7 @@ const STEPS = () => [
 async function run(u, m, opts = {}) {
   const stage = $('stage');
   $('err').textContent = ''; $('more').innerHTML = '';
+  document.body.classList.add('searching');
   stage.innerHTML = '<div class="loading"><b></b><span></span></div>';
   const lb = stage.querySelector('b'), sub = stage.querySelector('span');
   let i = 0; lb.textContent = STEPS()[0] + '...';
@@ -785,15 +823,20 @@ async function run(u, m, opts = {}) {
   const minWait = sleep(m ? 1700 : 1000);
   try {
     const a = await load(u);
-    let circle = [];
+    let circle = [], search = [];
     if (!m) {
       circle = await loadCircle(a, (done, n) => {
-        clearInterval(tick); tick = null;
+        if (tick) { clearInterval(tick); tick = null; }
         lb.textContent = T(`Tumhare circle ke ${done}/${n} logon ki kundli ban gayi`, `Checked ${done} of ${n} people from your circle`);
+      }).catch(() => []);
+      if (tick) { clearInterval(tick); tick = null; }
+      lb.textContent = T(`Ab poore GitHub pe ${searchLang(a) || ''} wale dhoondh rahe hain...`, `Now searching all of GitHub for ${searchLang(a) || ''} devs like you...`);
+      search = await loadSearch(a, new Set(circle.map(d => d.login.toLowerCase())), (done, n) => {
+        lb.textContent = T(`Poore GitHub se ${done}/${n} rishte check ho gaye`, `Checked ${done} of ${n} developers from across GitHub`);
       }).catch(() => []);
     }
     const pool = await poolPromise;
-    const cands = candidates(a, circle, pool);
+    const cands = candidates(a, circle, search, pool);
     // real names and X handles for the people most likely to be shown
     const top = cands.slice(0, 3).filter(c => c.other.lite);
     if (top.length) {
@@ -814,7 +857,7 @@ async function run(u, m, opts = {}) {
     history.replaceState(null, '', '?' + new URLSearchParams(m ? { u: a.login, m: b.login } : { u: a.login }));
   } catch (e) {
     if (tick) clearInterval(tick);
-    stage.innerHTML = '';
+    if (last) render(); else renderLanding();
     $('err').textContent = e.message === 'notfound' ? T('Ye username GitHub pe nahi mila', 'That username is not on GitHub')
       : e.message === 'rate' ? T('GitHub ne thoda rukne bola hai (rate limit). 10 min baad try karo', 'GitHub asked us to slow down (rate limit). Try again in 10 minutes')
         : T('Kuch gadbad ho gayi, dobara try karo', 'Something broke, try again');
@@ -825,19 +868,59 @@ function applyStatic() {
   document.documentElement.lang = LANG === 'en' ? 'en' : 'hi-Latn';
   $('lang-desi').classList.toggle('on', LANG === 'desi');
   $('lang-en').classList.toggle('on', LANG === 'en');
-  $('tag').textContent = T('apna GitHub soulmate dhoondo. biodata, kundli aur shaadi ka card, sab tumhare public GitHub se.',
-    'Find your GitHub soulmate. A desi rishta biodata, a kundli (horoscope) match and a wedding card, all from your public GitHub.');
+  $('h1').innerHTML = T('Apna GitHub <em>soulmate</em> dhoondo', 'Find your GitHub <em>soulmate</em>');
+  $('tag').textContent = T('Pandit ji tumhara public GitHub padhenge, tumhare circle aur poore GitHub mein rishta dhoondhenge, 36 gun milayenge, aur shaadi ka card chhaap denge.',
+    'Pandit ji, the matchmaker, reads your public GitHub, searches your circle and all of GitHub, matches your kundli (horoscope) across 36 gunas, then prints the wedding card.');
+  $('mtoggle').textContent = $('mrow').hidden ? T('+ kisi specific se kundli milao', '+ match with someone specific') : T('− sirf mera rishta dhoondo', '− just find my rishta');
   $('u').placeholder = 'your github username';
   $('m').placeholder = T('kisi se kundli milao (optional)', 'match with someone (optional)');
   $('go').textContent = T('Rishta dhoondo', 'Find my rishta');
   const jt = $('joinTxt'); jt.textContent = T('Mujhe bhi rishta pool mein daalo ', 'Add me to the rishta pool ');
   jt.append(el('small', null, T('(sirf public GitHub stats, kabhi bhi hata sakte ho)', '(public GitHub stats only, remove anytime)')));
-  const empty = $('empty'); if (empty) empty.textContent = T('Pandit ji tumhare GitHub circle, rishta pool aur celebrities mein rishta dhoondhenge.',
-    'Pandit ji (the family priest) will look for your rishta in your GitHub circle, the rishta pool and among celebrities.');
+  if (!last) renderLanding();
   $('foot').textContent = T('for fun, not for actual shaadi. sirf public GitHub stats, pool mein jaana optional hai.',
     'For fun, not for an actual wedding. Public GitHub stats only, joining the pool is optional.');
   $('snd').textContent = soundOn ? '🔊' : '🔇';
   updateCount(); showLeave();
+}
+
+// what a first-time visitor sees: where Pandit ji looks, a sample card, how it works
+function renderLanding() {
+  const stage = $('stage'); stage.innerHTML = ''; $('more').innerHTML = '';
+  const land = el('div', 'landing');
+  const src = el('div', 'sources');
+  [['🫂', T('Tumhara circle', 'Your GitHub circle')], ['🌍', T('Poora GitHub', 'All of GitHub')],
+   ['💌', T('Rishta pool', 'The rishta pool')], ['⭐', 'Celebrities']].forEach(([icon, label]) => {
+    const s = el('span'); s.append(el('b', null, icon), document.createTextNode(label)); src.append(s);
+  });
+  land.append(src);
+  if (SNAP.gaearon && SNAP.yyx990803) {
+    const a = famous('gaearon'), b = famous('yyx990803'), total = kundli(a, b).total;
+    const demo = el('div', 'demo');
+    demo.append(el('div', 'ribbon', T('Sample rishta · click karo', 'Sample match · tap it')), weddingCard(a, b, total, 'famous'));
+    demo.onclick = () => { unlockAudio(); $('u').value = 'gaearon'; $('m').value = 'yyx990803'; showMatchRow(true); run('gaearon', 'yyx990803'); };
+    const cap = el('div', 'democap');
+    cap.innerHTML = T(`<b>React</b> wale Dan aur <b>Vue</b> wale Evan: ${total}/36. Pandit ji ne haan bol diya.`,
+      `Dan from <b>React</b> and Evan from <b>Vue</b>: ${total}/36. Pandit ji approves.`);
+    land.append(demo, cap);
+  }
+  const how = el('div', 'how');
+  [[1, T('Biodata', 'Your biodata'), T('Stars ban jaate hain kad, top language gotra, aur commit ka time rashi.',
+      'Your stars become your height, your top language your clan, your commit hours your star sign.')],
+   [2, T('Kundli milan', 'Kundli match'), T('8 gun: stack, neend ka time, weekend commits aur stars. 36 mein se score.',
+      '8 gunas from your stack, sleep schedule, weekend commits and stars, scored out of 36.')],
+   [3, T('Shaadi ka card', 'The wedding card'), T('Download karo, family group mein bhejo, ya seedha rishta bhejo.',
+      'Download it, post it, or send the rishta straight to your match on X.')]].forEach(([n, title, text]) => {
+    const d = el('div'); d.append(el('i', null, String(n)), el('b', null, title), el('p', null, text)); how.append(d);
+  });
+  land.append(how);
+  stage.append(land);
+}
+
+function showMatchRow(on) {
+  $('mrow').hidden = !on;
+  if (!on) $('m').value = '';
+  $('mtoggle').textContent = on ? T('− sirf mera rishta dhoondo', '− just find my rishta') : T('+ kisi specific se kundli milao', '+ match with someone specific');
 }
 
 function setLang(l) {
@@ -865,11 +948,14 @@ $('snd').onclick = () => {
 };
 try { if (localStorage.getItem('gr-join') === 'off') $('join').checked = false; } catch (e) {}
 
+$('mtoggle').onclick = () => { showMatchRow($('mrow').hidden); if (!$('mrow').hidden) $('m').focus(); };
+
 const tryRow = $('try');
 tryRow.append('try: ');
-['torvalds', 'karpathy', 'hkirat', 'hiteshchoudhary', 'ThePrimeagen'].filter(x => SNAP[x.toLowerCase()]).forEach(x => {
-  const a = el('a', null, '@' + x);
-  a.onclick = () => { unlockAudio(); $('u').value = x; $('m').value = ''; run(x); };
+['torvalds', 'karpathy', 'hiteshchoudhary', 'ThePrimeagen', 't3dotgg'].filter(x => SNAP[x.toLowerCase()]).forEach(x => {
+  const s = SNAP[x.toLowerCase()].user;
+  const a = el('a'); a.append(avatar(s.avatar_url, 44), document.createTextNode(s.name || s.login));
+  a.onclick = () => { unlockAudio(); $('u').value = s.login; showMatchRow(false); run(s.login); };
   tryRow.append(a);
 });
 
@@ -879,6 +965,6 @@ poolPromise.then(updateCount);
 const q = new URLSearchParams(location.search);
 if (q.get('u')) {
   $('u').value = q.get('u');
-  if (q.get('m')) $('m').value = q.get('m');
+  if (q.get('m')) { $('m').value = q.get('m'); showMatchRow(true); }
   run(q.get('u'), q.get('m'));
 }

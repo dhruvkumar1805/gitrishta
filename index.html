@@ -7,16 +7,21 @@
 <meta name="description" content="Turn your GitHub into a rishta biodata. Kundli bhi milao.">
 <meta property="og:title" content="gitrishta · your GitHub as a rishta biodata">
 <meta property="og:description" content="Kad = stars. Gotra = top language. Manglik = pushes on Friday night. Kundli bhi milao.">
-<meta property="og:image" content="https://dhruvkumar1805.github.io/gitrishta/og.png">
+<meta property="og:image" content="https://www.dhruvkumar.dev/gitrishta/og.jpg">
+<meta property="og:url" content="https://www.dhruvkumar.dev/gitrishta">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@dhruvkumar1805">
-<meta name="twitter:image" content="https://dhruvkumar1805.github.io/gitrishta/og.png">
+<meta name="twitter:image" content="https://www.dhruvkumar.dev/gitrishta/og.jpg">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💍</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link crossorigin="anonymous" href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600;700;800&display=block" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js"></script>
-<script src="famous.js"></script>
+<script>
+  // served at dhruvkumar.dev/gitrishta (no trailing slash), so relative URLs would resolve from /
+  window.GR_BASE = /\/gitrishta$/.test(location.pathname) ? location.pathname + '/' : '';
+  document.write('<script src="' + GR_BASE + 'famous.js"><\/script>');
+</script>
 <style>
   :root {
     --maroon: #7a1c1c; --maroon2: #5c1212; --gold: #b8862f; --gold2: #d9ad5b;
@@ -241,7 +246,7 @@
 <script>
 const API = 'https://api.github.com';
 const CREATOR = 'dhruvkumar1805';
-const SITE = location.protocol.startsWith('http') ? location.host + location.pathname.replace(/index\.html$/, '') : 'dhruvkumar1805.github.io/gitrishta';
+const SITE = location.protocol.startsWith('http') ? location.host.replace(/^www\./, '') + location.pathname.replace(/index\.html$/, '') : 'dhruvkumar.dev/gitrishta';
 const SNAP = {};
 (window.FAMOUS || []).forEach(s => { SNAP[s.user.login.toLowerCase()] = s; });
 const cache = {};
@@ -678,7 +683,7 @@ function actions(card, file, xText, waText) {
 
 function pageUrl(u, m) {
   const q = new URLSearchParams({ u }); if (m) q.set('m', m);
-  return `https://${SITE.replace(/\/$/, '')}/?${q}`;
+  return `https://${SITE.replace(/\/$/, '')}?${q}`;
 }
 
 /* ---------- celebration: petals, stamp thud, dhol ---------- */

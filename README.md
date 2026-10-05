@@ -4,7 +4,7 @@ apna GitHub soulmate dhoondo.
 
 Type a GitHub username and Pandit ji reads your public profile, makes your rishta biodata, matches your kundli against well-known developers and prints the shaadi ka card.
 
-**Live:** https://dhruvkumar1805.github.io/gitrishta
+**Live:** https://dhruvkumar.dev/gitrishta
 
 ![dan weds Evan You](og.png)
 

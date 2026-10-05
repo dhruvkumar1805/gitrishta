@@ -6,7 +6,7 @@ Type a GitHub username and Pandit ji reads your public profile, makes your risht
 
 **Live:** https://dhruvkumar.dev/gitrishta
 
-![dan weds Evan You](og.png)
+![dan weds Evan You](og.jpg)
 
 ## What it reads
 

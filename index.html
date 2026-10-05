@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>gitrishta</title>
-<meta name="description" content="Turn your GitHub into a rishta biodata. Kundli bhi milao.">
-<meta property="og:title" content="gitrishta · your GitHub as a rishta biodata">
-<meta property="og:description" content="Kad = stars. Gotra = top language. Manglik = pushes on Friday night. Kundli bhi milao.">
+<meta name="description" content="Find your GitHub soulmate. A desi rishta biodata, a kundli match and a shaadi ka card, from your public GitHub.">
+<meta property="og:title" content="gitrishta · find your GitHub soulmate">
+<meta property="og:description" content="Kad = stars. Gotra = top language. Manglik = pushes on Friday night. Pandit ji finds your rishta in your GitHub circle.">
 <meta property="og:image" content="https://www.dhruvkumar.dev/gitrishta/og.jpg">
 <meta property="og:url" content="https://www.dhruvkumar.dev/gitrishta">
 <meta property="og:type" content="website">
@@ -34,18 +34,29 @@
       radial-gradient(circle at 13px 6px, var(--marigold) 7px, transparent 7.5px) 0 0/26px 26px repeat-x,
       radial-gradient(circle at 13px 6px, var(--marigold2) 3px, transparent 3.5px) 0 0/26px 26px repeat-x,
       linear-gradient(#2f6b3a, #2f6b3a) 0 5px/100% 2px no-repeat; }
-  .wrap { max-width: 1220px; margin: 0 auto; padding: 26px 16px 60px; }
+  .wrap { max-width: 1220px; margin: 0 auto; padding: 14px 16px 60px; }
+  .topbar { display: flex; justify-content: space-between; align-items: center; }
+  .lang { display: flex; border: 1.5px solid #e6d5b5; border-radius: 999px; background: #fff; overflow: hidden; }
+  .lang button { border: 0; background: none; padding: 7px 12px; font: 600 12.5px Inter; color: var(--muted); cursor: pointer; }
+  .lang button.on { background: var(--maroon); color: #fff; }
+  .snd { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid #e6d5b5; background: #fff; font-size: 17px; cursor: pointer; }
   header { text-align: center; margin: 4px 0 20px; }
   header .logo { font: 400 46px/1 'Rozha One', serif; color: var(--maroon); }
   header .logo span { color: var(--marigold2); }
-  header p { margin-top: 8px; color: var(--ink2); font-size: 15.5px; }
-  form { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-items: center; margin: 0 auto 10px; max-width: 760px; }
+  header p { margin: 8px auto 0; color: var(--ink2); font-size: 15.5px; max-width: 640px; }
+  .count { margin-top: 10px; display: inline-flex; align-items: center; gap: 7px; font: 600 13px Inter; color: var(--green); background: rgba(47,107,58,.08); padding: 4px 12px; border-radius: 999px; }
+  .count[hidden] { display: none; }
+  .count i { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 0 3px rgba(34,197,94,.2); }
+  form { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-items: center; margin: 0 auto 8px; max-width: 760px; }
   .inp { display: flex; align-items: center; background: #fff; border: 1.5px solid #e6d5b5; border-radius: 12px; height: 48px; padding: 0 14px; gap: 6px; flex: 1 1 220px; }
   .inp:focus-within { border-color: var(--gold); box-shadow: 0 0 0 4px rgba(184,134,47,.15); }
   .inp b { color: var(--muted); font-weight: 600; }
   .inp input { border: 0; outline: 0; font: 500 15.5px Inter; width: 100%; background: transparent; color: var(--ink); }
   button.go { height: 48px; padding: 0 22px; border: 0; border-radius: 12px; background: var(--maroon); color: #fff; font: 600 15px Inter; cursor: pointer; box-shadow: 0 6px 18px -8px rgba(122,28,28,.6); }
   button.go:hover { background: var(--maroon2); }
+  .consent { display: flex; justify-content: center; align-items: center; gap: 7px; font-size: 13px; color: var(--ink2); margin-bottom: 6px; cursor: pointer; }
+  .consent input { accent-color: var(--maroon); width: 15px; height: 15px; }
+  .consent small { color: var(--muted); }
   .try { display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 6px; font-size: 13px; color: var(--muted); margin-bottom: 22px; }
   .try a { color: var(--maroon); font-weight: 600; text-decoration: none; cursor: pointer; margin: 0 3px; }
   .err { text-align: center; color: var(--maroon); font-weight: 600; margin: -6px 0 16px; }
@@ -55,16 +66,20 @@
   .actions button { height: 38px; padding: 0 13px; border-radius: 10px; border: 1.5px solid #e6d5b5; background: #fff; color: var(--ink); font: 600 13.5px Inter; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
   .actions .x { background: #111; color: #fff; border-color: #111; }
   .actions .wa { background: #1f9d55; color: #fff; border-color: #1f9d55; }
+  .actions .send { background: var(--marigold2); color: #fff; border-color: var(--marigold2); }
   .loading { text-align: center; padding: 40px 0; }
   .loading b { display: block; font: 400 22px 'Rozha One', serif; color: var(--maroon); }
   .loading span { color: var(--muted); font-size: 14px; }
   .more { width: 100%; max-width: 1148px; margin: 26px auto 0; }
-  .more h4 { font: 400 20px 'Rozha One', serif; color: var(--maroon); text-align: center; margin-bottom: 10px; }
+  .more h4 { font: 400 20px 'Rozha One', serif; color: var(--maroon); text-align: center; margin: 16px 0 10px; }
   .chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
   .chip { display: flex; align-items: center; gap: 8px; background: #fff; border: 1.5px solid #e6d5b5; border-radius: 999px; padding: 4px 12px 4px 4px; cursor: pointer; font: 600 13px Inter; color: var(--ink); }
   .chip:hover { border-color: var(--gold); }
+  .chip.bad { border-color: #e8a3a3; }
   .chip img { width: 28px; height: 28px; border-radius: 50%; }
   .chip em { font-style: normal; color: var(--maroon); font-weight: 700; }
+  .leave { text-align: center; margin-top: 18px; font-size: 12.5px; }
+  .leave a { color: var(--muted); cursor: pointer; text-decoration: underline; }
   .toast { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%); background: #111; color: #fff; padding: 10px 16px; border-radius: 10px; font: 600 13.5px Inter; opacity: 0; transition: opacity .2s; pointer-events: none; z-index: 10; }
   .toast.on { opacity: 1; }
   .empty { color: var(--muted); text-align: center; padding: 30px 0; }
@@ -127,7 +142,7 @@
   .stamp small { display: block; font: 600 10.5px Inter; letter-spacing: .04em; text-transform: none; margin-top: 3px; }
   .stamp.mid { color: #b45309; } .stamp.bad { color: #b91c1c; }
 
-  /* export frame, rendered offscreen at 4:5 */
+  /* export frame: kept at the origin but invisible, html-to-image renders it blank when offscreen */
   .export { position: fixed; left: 0; top: 0; opacity: 0; z-index: -1; pointer-events: none; width: 640px; display: flex; flex-direction: column; align-items: center; padding: 40px 0 88px;
     background: radial-gradient(circle at 19px 9px, var(--marigold) 9px, transparent 9.5px) 0 0/38px 34px repeat-x, var(--bg); }
   .export .card { box-shadow: 0 20px 40px -22px rgba(60,20,10,.5); }
@@ -170,9 +185,8 @@
 
   /* reveal animations, only on the page (the export clone lives outside .stage) */
   .stage .card { animation: rise .6s cubic-bezier(.2,.9,.3,1) both; }
-  .stage .col:nth-child(2) .card { animation-delay: .15s; }
+  .stage .col:nth-child(3) .card { animation-delay: .15s; }
   .stage .sec, .stage table.koota tr, .stage .match, .stage .upay { animation: fadein .45s ease both; }
-  .stage .sec:nth-of-type(1) { animation-delay: .25s; } .stage .sec:nth-of-type(2) { animation-delay: .45s; } .stage .sec:nth-of-type(3) { animation-delay: .65s; }
   .stage .match { animation-delay: 1s; }
   .stage table.koota tr:nth-child(1) { animation-delay: .3s; } .stage table.koota tr:nth-child(2) { animation-delay: .38s; }
   .stage table.koota tr:nth-child(3) { animation-delay: .46s; } .stage table.koota tr:nth-child(4) { animation-delay: .54s; }
@@ -188,11 +202,12 @@
   .petals { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 5; }
   .petals i { position: absolute; top: -30px; display: block; border-radius: 60% 0 60% 0; animation: fall linear forwards; }
   @keyframes fall { to { transform: translate(var(--dx), 110vh) rotate(var(--r)); } }
-  .snd { position: fixed; top: 34px; right: 16px; width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid #e6d5b5; background: #fff; font-size: 17px; cursor: pointer; z-index: 6; }
 
   @media (max-width: 600px) {
     html, body { overflow-x: hidden; }
     .inp { flex: 1 1 100%; } .inp input { min-width: 0; } button.go { width: 100%; }
+    .consent { display: block; text-align: center; }
+    .consent input { vertical-align: -2px; margin-right: 6px; }
     .stage .col, .stage .solo { width: 100%; }
     .stage .wcard { min-width: 0; }
     .stage table.rows td { white-space: normal; overflow-wrap: anywhere; }
@@ -206,7 +221,6 @@
     .stage .photo { width: 92px; height: 112px; }
     .stage table.rows td.k { width: 86px; white-space: normal; }
     .stage .title { font-size: 32px; }
-    .stage .kpair .p { width: 120px; }
     .stage .wcard { width: 100%; padding: 8px; }
     .stage .wcard .frame { padding: 18px 12px 12px; }
     .stage .wrow { grid-template-columns: 62px minmax(0, 1fr) 62px; gap: 6px; }
@@ -219,628 +233,36 @@
 <body>
 <div class="garland"></div>
 <div class="wrap">
+  <div class="topbar">
+    <div class="lang"><button id="lang-desi" type="button">🇮🇳 Desi</button><button id="lang-en" type="button">🌍 English</button></div>
+    <button class="snd" id="snd" type="button"></button>
+  </div>
   <header>
     <div class="logo">git<span>rishta</span></div>
-    <p>apna GitHub soulmate dhoondo. biodata, kundli aur shaadi ka card, sab tumhare public GitHub se.</p>
+    <p id="tag"></p>
+    <div class="count" id="count" hidden><i></i><span></span></div>
   </header>
 
   <form id="f">
-    <label class="inp"><b>@</b><input id="u" placeholder="your github username" autocomplete="off" autocapitalize="off" spellcheck="false" required></label>
-    <label class="inp"><b>@</b><input id="m" placeholder="kisi se kundli milao (optional)" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
-    <button class="go" type="submit">Rishta dhoondo</button>
+    <label class="inp"><b>@</b><input id="u" autocomplete="off" autocapitalize="off" spellcheck="false" required></label>
+    <label class="inp"><b>@</b><input id="m" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+    <button class="go" id="go" type="submit"></button>
   </form>
+  <label class="consent"><input type="checkbox" id="join" checked><span id="joinTxt"></span></label>
   <div class="try" id="try"></div>
   <div class="err" id="err"></div>
 
-  <div class="stage" id="stage"><div class="empty">Sab kuch tumhare browser mein chalta hai, sirf public GitHub data se.</div></div>
+  <div class="stage" id="stage"><div class="empty" id="empty"></div></div>
   <div id="more"></div>
+  <div class="leave" id="leave"></div>
 
-  <footer>made by <a href="https://x.com/dhruvkumar1805" target="_blank" rel="noopener">@dhruvkumar1805</a> · <a href="https://dhruvkumar.dev" target="_blank" rel="noopener">dhruvkumar.dev</a> · <a href="https://github.com/dhruvkumar1805/gitrishta" target="_blank" rel="noopener">source</a><br>for fun, not for actual shaadi. only public GitHub data, nothing is stored.</footer>
+  <footer>made by <a href="https://x.com/dhruvkumar1805" target="_blank" rel="noopener">@dhruvkumar1805</a> · <a href="https://dhruvkumar.dev" target="_blank" rel="noopener">dhruvkumar.dev</a> · <a href="https://github.com/dhruvkumar1805/gitrishta" target="_blank" rel="noopener">source</a><br><span id="foot"></span></footer>
 </div>
 <div class="toast" id="toast"></div>
 
 <svg width="0" height="0" style="position:absolute">
   <symbol id="corner" viewBox="0 0 46 46"><g fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 43V12C3 7 7 3 12 3h31"/><path d="M9 43V17c0-4.5 3.5-8 8-8h26"/><path d="M15 22c0-4 3-7 7-7"/></g><circle cx="22" cy="22" r="2.2" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/></symbol>
 </svg>
-
-<script>
-const API = 'https://api.github.com';
-const CREATOR = 'dhruvkumar1805';
-const SITE = location.protocol.startsWith('http') ? location.host.replace(/^www\./, '') + location.pathname.replace(/index\.html$/, '') : 'dhruvkumar.dev/gitrishta';
-const SNAP = {};
-(window.FAMOUS || []).forEach(s => { SNAP[s.user.login.toLowerCase()] = s; });
-const cache = {};
-
-async function gh(path) {
-  const r = await fetch(API + path, { headers: { Accept: 'application/vnd.github+json' } });
-  if (r.status === 404) throw new Error('notfound');
-  if (r.status === 403 || r.status === 429) throw new Error('rate');
-  if (!r.ok) throw new Error('fail');
-  return r.json();
-}
-
-async function load(login) {
-  const key = login.toLowerCase();
-  if (cache[key]) return cache[key];
-  if (SNAP[key]) return (cache[key] = analyze(SNAP[key].user, SNAP[key].repos, []));
-  const user = await gh(`/users/${encodeURIComponent(login)}`);
-  const [repos, events] = await Promise.all([
-    gh(`/users/${encodeURIComponent(login)}/repos?per_page=100&sort=pushed`).catch(() => []),
-    gh(`/users/${encodeURIComponent(login)}/events/public?per_page=100`).catch(() => []),
-  ]);
-  return (cache[key] = analyze(user, repos, events));
-}
-
-function analyze(user, repos, events) {
-  const own = repos.filter(r => !r.fork);
-  const forks = repos.length - own.length;
-  const stars = own.reduce((s, r) => s + r.stargazers_count, 0);
-  const langCount = {};
-  own.forEach(r => { if (r.language) langCount[r.language] = (langCount[r.language] || 0) + 1; });
-  const langs = Object.entries(langCount).sort((a, b) => b[1] - a[1]).map(x => x[0]);
-  const best = own.slice().sort((a, b) => b.stargazers_count - a.stargazers_count)[0];
-  const yearAgo = Date.now() - 365 * 864e5;
-  const dead = own.filter(r => new Date(r.pushed_at) < yearAgo).sort((a, b) => new Date(a.pushed_at) - new Date(b.pushed_at));
-  const latest = own.slice().sort((a, b) => new Date(b.pushed_at) - new Date(a.pushed_at))[0];
-  const lastPush = Math.max(
-    latest ? +new Date(latest.pushed_at) : 0,
-    ...events.filter(e => e.type === 'PushEvent').map(e => +new Date(e.created_at)), 0);
-
-  let acts = events.filter(e => ['PushEvent', 'PullRequestEvent', 'CreateEvent', 'IssuesEvent', 'IssueCommentEvent'].includes(e.type)).map(e => e.created_at);
-  // many people's public event feed is nearly empty, so fall back to repo push/create times
-  if (acts.length < 10) acts = acts.concat(own.flatMap(r => [r.pushed_at, r.created_at]).filter(Boolean));
-  const hours = Array(24).fill(0);
-  let weekend = 0, lateFri = 0;
-  acts.forEach(ts => {
-    const d = new Date(ts), h = d.getHours(), day = d.getDay();
-    hours[h]++;
-    if (day === 0 || day === 6) weekend++;
-    if ((day === 5 && h >= 18) || (day === 6 && h < 4)) lateFri++;
-  });
-  let peak = null, best3 = 0;
-  for (let h = 0; h < 24; h++) {
-    const w = hours[h] + hours[(h + 1) % 24] + hours[(h + 23) % 24];
-    if (w > best3) { best3 = w; peak = h; }
-  }
-  const age = Math.max(0, Math.floor((Date.now() - new Date(user.created_at)) / (365.25 * 864e5)));
-  return {
-    login: user.login, name: user.name || user.login, avatar: user.avatar_url, bio: user.bio || '',
-    company: (user.company || '').replace(/^@/, '').trim(), location: user.location || '',
-    twitter: user.twitter_username, followers: user.followers, following: user.following,
-    since: new Date(user.created_at).getFullYear(), age, stars, forks, own: own.length, langs, best,
-    dead, latest, lastPush, acts: acts.length, peak, weekendRatio: acts.length ? weekend / acts.length : 0, lateFri,
-  };
-}
-
-const EXPECT = {
-  JavaScript: 'Should not switch frameworks every week',
-  TypeScript: "Strictly typed. No 'any' in this relationship",
-  Python: 'Must respect indentation and personal space',
-  Go: 'Simple, no drama. If err != nil, talk it out',
-  Rust: 'Memory safe and emotionally borrow-checked',
-  Java: 'Stable, long term support. Thoda verbose chalega',
-  'C++': 'No undefined behaviour please',
-  C: 'Should manage own memory. And feelings',
-  'C#': 'Okay with Visual Studio taking 4 minutes to open',
-  PHP: 'Accepts me as I am',
-  Swift: 'iPhone wale only. Android wale maaf karein',
-  Kotlin: 'Null-safe. Will never leave me hanging',
-  Ruby: 'Happy, optimistic, convention over configuration',
-  Dart: 'Cross-platform family. Flutter chalega',
-  HTML: 'Must not say HTML is not a programming language',
-  CSS: 'Can center a div. Non-negotiable',
-  Shell: 'Comfortable in the terminal. No GUI expectations',
-  'Jupyter Notebook': 'Must restart the kernel without complaining',
-  Vue: 'Gentle and progressive',
-  Svelte: 'Less code, more love',
-  Lua: 'Lightweight, no heavy family expectations',
-  'Vim Script': 'Must know how to exit. Mandatory',
-};
-
-const fmtHour = h => `${h % 12 || 12} ${h < 12 ? 'AM' : 'PM'}`;
-const inr = n => n.toLocaleString('en-IN');
-const daysAgo = t => Math.floor((Date.now() - t) / 864e5);
-
-function umar(d) {
-  const n = d.age >= 5 ? 'shaadi ki umar ho gayi' : d.age <= 1 ? 'abhi bachcha hai' : 'abhi settle ho rahe hain';
-  return [`${d.age} saal`, `GitHub pe since ${d.since} · ${n}`];
-}
-
-function height(d) {
-  const s = d.stars;
-  const n = s === 0 ? 'abhi growing phase mein' : s < 25 ? 'average height' : s < 300 ? 'lambi height' : s < 3000 ? '6 foot, model type' : 'celebrity. rishta mushkil hai';
-  return [`${inr(s)} ★`, n];
-}
-
-function rashi(d) {
-  if (d.peak === null) return ['Pata nahi', 'commits ka koi record nahi'];
-  const h = d.peak, n = `most active at ${fmtHour(h)}`;
-  if (h <= 4) return ['Ullu 🦉', n];
-  if (h <= 8) return ['Brahma muhurat coder', n];
-  if (h <= 17) return ['Office hours only. Sanskari', n];
-  return ['Shaam ki shift, chai ke baad', n];
-}
-
-function manglik(d) {
-  if (d.lateFri >= 2) return ['Haan ji', 'Friday raat ko push karte hain'];
-  if (d.weekendRatio > 0.3) return ['Thoda sa', 'weekends pe bhi commit'];
-  if (!d.acts) return ['Nahi', 'push ka koi record nahi'];
-  return ['Nahi', 'deploys only on weekdays'];
-}
-
-function occupation(d) {
-  if (d.company) return [d.company, "relatives: 'computer ka kaam'"];
-  const bio = d.bio;
-  if (!bio) return ['Bio khaali hai', 'mysterious. family worried'];
-  if (/founder|co-?founder|ceo/i.test(bio)) return ['Founder', "relatives: 'naukri kab lagegi?'"];
-  if (/student|undergrad|b\.?tech|college/i.test(bio)) return ['Student', "relatives: 'abhi padhai chal rahi hai'"];
-  const first = bio.split(/[·|,\n•]/)[0].trim();
-  if (first && first.length <= 34) return [first, "relatives: 'computer ka kaam'"];
-  return ['Computer ka kaam', 'exact details family ko bhi nahi pata'];
-}
-
-function sampatti(d) {
-  const note = d.dead.length
-    ? `${d.dead.length} untouched for a year, incl. '${d.dead[0].name}'`
-    : `${d.forks} adopted (forks), sab active`;
-  return [`${d.own} repos`, note];
-}
-
-function status(d) {
-  if (!d.lastPush) return ['Unknown', 'GitHub pe sirf profile pic hai'];
-  const n = daysAgo(d.lastPush), where = d.latest ? `last seen in '${d.latest.name}'` : '';
-  if (n <= 7) return ['Available. Active this week', where];
-  if (n <= 60) return ['Available', `${where}, ${n} din pehle`];
-  if (n <= 365) return ['Shayad engaged hai', `${n} din se koi commit nahi`];
-  return ['Shaadi ho chuki hai', `GitHub chhod diya, ${Math.floor(n / 365)} saal se gayab`];
-}
-
-function habits(d) {
-  if (d.following > d.followers * 2 && d.following > 20) return [`Follows ${inr(d.following)}, followed by ${inr(d.followers)}`, 'bhavuk insaan'];
-  if (d.dead.length > d.own * 0.6 && d.own > 5) return ['Starts projects, finishes none', `${d.dead.length} of ${d.own} repos chhod diye`];
-  if (d.peak !== null && d.peak <= 4) return ['Chai, 2 AM commits, 47 tabs', 'neend se rishta toot chuka hai'];
-  return ['Chai, side projects, 47 tabs', 'smoking nahi, drinking sirf chai'];
-}
-
-function contact(d) {
-  if (d.twitter) return [`@${d.twitter} on X`, 'DMs open, replies in 2 to 3 sprints'];
-  return ['Mummy ji via LinkedIn', 'serious inquiries only'];
-}
-
-// the relative who compares you to "Sharma ji ka beta": a famous dev in your stack with more stars
-function sharmaJi(d) {
-  const others = Object.keys(SNAP).filter(k => k !== d.login.toLowerCase() && k !== CREATOR)
-    .map(k => analyze(SNAP[k].user, SNAP[k].repos, []));
-  const richer = others.filter(o => o.stars > d.stars);
-  if (!richer.length) return ['"Ab Sharma ji apne bete ko tumhara example dete hain"', null];
-  // Sharma ji's kid should be desi when the user is
-  const desi = /india|bharat|bangalore|bengaluru|delhi|mumbai|pune|hyderabad|chennai|kolkata|noida|gurgaon|jaipur/i;
-  const local = desi.test(d.location) ? richer.filter(o => desi.test(o.location)) : [];
-  const base = local.length ? local : richer;
-  const sameStack = base.filter(o => o.langs[0] === d.langs[0]);
-  const pool = sameStack.length ? sameStack : base;
-  const s = pool.sort((a, b) => b.stars - a.stars)[0];
-  return [`"Sharma ji ka beta @${s.login} ke ${inr(s.stars)} stars hain"`, `aur tumhare sirf ${inr(d.stars)}? · Mausi ji`];
-}
-
-const UPAY = {
-  Varna: "Ek dusre ki language mein hello world likho, 7 din tak",
-  Vashya: 'Senior wala junior ke PRs bina nitpick approve karega',
-  Tara: 'Kam stars wale ke 3 repos ko star karo. Abhi. Isi waqt',
-  Yoni: 'Standup 3 PM rakho, dono ki neend bach jayegi',
-  'Graha Maitri': 'Ek common side project shuru karo. Aur khatam bhi karo',
-  Gana: 'Ullu wala 2 AM ke baad commit nahi karega, 11 Mondays tak',
-  Bhakoot: 'Zyada repos wala 5 purane repos archive karega',
-  Nadi: 'Weekend pe laptop band. Dono ka. No exceptions',
-};
-
-function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
-function avatar(url, size) { const i = el('img'); i.crossOrigin = 'anonymous'; i.src = url + (url.includes('?') ? '&' : '?') + 's=' + size; i.alt = ''; return i; }
-
-function rowsTable(rows) {
-  const t = el('table', 'rows');
-  rows.forEach(([k, v, note]) => {
-    const tr = el('tr'); tr.append(el('td', 'k', k));
-    const td = el('td', null, v); if (note) td.append(el('small', null, note));
-    tr.append(td); t.append(tr);
-  });
-  return t;
-}
-const pair = (k, f, d) => { const [v, n] = f(d); return [k, v, n]; };
-function section(title, ...kids) { const s = el('div', 'sec'); s.append(el('h3', null, title), ...kids); return s; }
-
-function frameShell() {
-  const card = el('div', 'card'); const frame = el('div', 'frame'); card.append(frame);
-  ['tl', 'tr', 'bl', 'br'].forEach(c => frame.insertAdjacentHTML('beforeend', `<svg class="corner ${c}"><use href="#corner"/></svg>`));
-  frame.append(el('div', 'shubh', '॥ शुभ विवाह ॥'));
-  return { card, frame };
-}
-function ornament() { const o = el('div', 'orn'); o.innerHTML = '<i></i>❦<i></i>'; return o; }
-function watermark(text) { const m = el('div', 'mark'); m.innerHTML = `<span><b>gitrishta</b> · ${text}</span><span>by @${CREATOR}</span>`; return m; }
-
-function verdict(total) {
-  if (total >= 32) return ['', 'Janam janam ka saath', 'merge to main. delete the branch'];
-  if (total >= 25) return ['', 'Shaadi pakki', 'merge without review'];
-  if (total >= 18) return ['mid', 'Chalega', 'needs one round of code review'];
-  return ['bad', 'Pandit ji ne mana kiya', 'merge conflict. dono branch alag rakho'];
-}
-
-function biodataCard(d, match) {
-  const { card, frame } = frameShell();
-  frame.append(el('div', 'title', 'Biodata'), ornament(), el('div', 'of', `of a developer · github.com/${d.login}`));
-
-  const personal = el('div', 'personal');
-  personal.append(section('Personal details', rowsTable([
-    ['Naam', d.name, `@${d.login}${d.location ? ' · ' + d.location : ''}`],
-    pair('Umar', umar, d),
-    pair('Kad', height, d),
-    ['Rang', 'Dark mode only', null],
-    ['Gotra', d.langs[0] || 'Markdown', d.langs[1] ? `upgotra: ${d.langs[1]}` : null],
-    pair('Rashi', rashi, d),
-    pair('Manglik', manglik, d),
-  ])));
-  const photo = el('div', 'photo'); photo.append(avatar(d.avatar, 300));
-  personal.append(photo);
-  frame.append(personal);
-
-  frame.append(section('Career & property', rowsTable([
-    pair('Vyavsay', occupation, d),
-    ['Package', `${inr(d.followers)} followers`, 'not in-hand'],
-    pair('Sampatti', sampatti, d),
-    ['Shaan', d.best && d.best.stargazers_count > 0 ? `${d.best.name} (${inr(d.best.stargazers_count)}★)` : 'Abhi mehnat chal rahi hai', null],
-    pair('Status', status, d),
-  ])));
-  frame.append(section('Lifestyle & expectations', rowsTable([
-    ['Shauk', d.langs.slice(0, 3).join(', ') || 'README likhna', null],
-    pair('Aadat', habits, d),
-    ['Ummeed', EXPECT[d.langs[0]] || 'Light mode users maaf karein', null],
-    pair('Sampark', contact, d),
-    pair('Rishtedaar', sharmaJi, d),
-  ])));
-
-  if (match) {
-    const m = el('div', 'match');
-    const mid = el('div'); mid.append(el('div', 'lbl', 'Rishta aaya hai'), el('b', null, match.other.name));
-    mid.append(el('small', null, `@${match.other.login} · ${verdict(match.total)[1].toLowerCase()}`));
-    const sc = el('div', 'sc', String(match.total)); sc.append(el('span', null, '/36'));
-    m.append(avatar(match.other.avatar, 120), mid, sc);
-    frame.append(m);
-  }
-  frame.append(el('div', 'note', 'Note: Serious inquiries only. Recruiters door rahein 🙏'));
-  frame.append(watermark('make yours'));
-  return card;
-}
-
-const ratio = (a, b) => { a += 1; b += 1; return Math.min(a, b) / Math.max(a, b); };
-const hourDiff = (a, b) => { const d = Math.abs(a - b) % 24; return Math.min(d, 24 - d); };
-const isNight = h => h !== null && (h >= 22 || h <= 4);
-
-function kundli(a, b) {
-  const la = a.langs.slice(0, 5), lb = b.langs.slice(0, 5);
-  const inter = la.filter(x => lb.includes(x)).length, uni = new Set([...la, ...lb]).size || 1;
-  const k = [];
-  const same = la[0] && la[0] === lb[0];
-  k.push(['Varna', 'top language', same ? 1 : 0, 1, same ? `Dono ${la[0]} wale. Same gotra` : `${la[0] || '?'} vs ${lb[0] || '?'}. Ghar wale samjha lenge`]);
-  const ad = Math.abs(a.since - b.since);
-  k.push(['Vashya', 'GitHub age', ad <= 1 ? 2 : ad <= 3 ? 1 : 0, 2, ad <= 1 ? 'Same batch' : `${ad} saal ka farak`]);
-  k.push(['Tara', 'stars', Math.round(3 * ratio(a.stars, b.stars)), 3, `${inr(a.stars)}★ vs ${inr(b.stars)}★`]);
-  let yoni, yn;
-  if (a.peak === null || b.peak === null) { yoni = 1; yn = 'Ek ka schedule hi nahi pata'; }
-  else { const hd = hourDiff(a.peak, b.peak); yoni = hd <= 2 ? 4 : hd <= 5 ? 2 : 0; yn = `${fmtHour(a.peak)} vs ${fmtHour(b.peak)}`; }
-  k.push(['Yoni', 'sleep schedule', yoni, 4, yn]);
-  k.push(['Graha Maitri', 'shared stack', Math.round(5 * inter / uni), 5, inter ? `${inter} common language${inter > 1 ? 's' : ''}` : 'Koi common language nahi. Translator chahiye']);
-  const na = isNight(a.peak), nb = isNight(b.peak);
-  k.push(['Gana', 'ullu vs sanskari', na === nb ? 6 : 2, 6, na && nb ? 'Dono ullu. 2 AM dates' : !na && !nb ? 'Dono sanskari, raat ko sote hain' : 'Ek ullu, ek sanskari']);
-  k.push(['Bhakoot', 'repo count', Math.round(7 * ratio(a.own, b.own)), 7, `${a.own} vs ${b.own} repos`]);
-  const wa = a.weekendRatio > 0.25, wb = b.weekendRatio > 0.25;
-  k.push(['Nadi', 'weekend commits', wa === wb ? 8 : 0, 8, wa === wb ? (wa ? 'Dono weekend pe bhi code karte hain' : 'Dono weekends pe offline') : 'Nadi dosh: ek weekend pe bhi code, ek ki life hai']);
-  return { k, total: k.reduce((s, x) => s + x[2], 0) };
-}
-
-function kundliCard(a, b) {
-  const { card, frame } = frameShell();
-  frame.append(el('div', 'title', 'Kundli Milan'), ornament(), el('div', 'of', 'ashtakoot guna milan · for developers'));
-  const pr = el('div', 'kpair');
-  [a, b].forEach((p, i) => {
-    const box = el('div', 'p'); box.append(avatar(p.avatar, 160), el('b', null, p.name), el('small', null, '@' + p.login));
-    pr.append(box); if (i === 0) pr.append(el('div', 'heart', '❤'));
-  });
-  frame.append(pr);
-  const { k, total } = kundli(a, b);
-  const t = el('table', 'koota');
-  k.forEach(([n, sub, s, max, c]) => {
-    const tr = el('tr');
-    const tn = el('td', 'n', n); tn.append(el('small', null, sub));
-    const ts = el('td', 's', String(s)); ts.append(el('span', null, ` / ${max}`));
-    tr.append(tn, el('td', 'c', c), ts); t.append(tr);
-  });
-  frame.append(t);
-  const weakest = k.slice().sort((x, y) => x[2] / x[3] - y[2] / y[3])[0];
-  const up = el('div', 'upay');
-  up.append(el('b', null, 'Pandit ji ka upay'), document.createTextNode(weakest[2] === weakest[3] ? 'Koi upay nahi chahiye. Seedha mandap book karo' : UPAY[weakest[0]]));
-  frame.append(up);
-  const tot = el('div', 'total');
-  const num = el('div', 'num', String(total)); num.append(el('span', null, ' / 36'));
-  const [cls, head, sub] = verdict(total);
-  const stamp = el('div', 'stamp ' + cls, head); stamp.append(el('small', null, sub));
-  tot.append(num, stamp);
-  frame.append(tot);
-  const wm = watermark('match yours'); wm.style.marginTop = '14px'; frame.append(wm);
-  return { card, total };
-}
-
-function weddingCard(a, b, total) {
-  const card = el('div', 'wcard'); const frame = el('div', 'frame'); card.append(frame);
-  ['tl', 'tr', 'bl', 'br'].forEach(c => frame.insertAdjacentHTML('beforeend', `<svg class="corner ${c}"><use href="#corner"/></svg>`));
-  frame.append(el('div', 'shubh', '॥ शुभ विवाह ॥'));
-  frame.append(el('div', 'kicker', total >= 18 ? 'Pandit ji ki bhavishyavani ke anusaar, aapko sadar amantrit kiya jaata hai' : 'Pandit ji ne bahut dhoondha. Yahi mila. Adjust kar lena'));
-  const row = el('div', 'wrow');
-  const av = p => { const d = el('div', 'av'); d.append(avatar(p.avatar, 240)); return d; };
-  const mid = el('div');
-  const names = el('div', 'wnames', a.name); names.append(el('em', null, 'weds')); names.append(document.createTextNode(b.name));
-  mid.append(names, el('div', 'whandles', `@${a.login}  ·  @${b.login}`));
-  row.append(av(a), mid, av(b));
-  frame.append(row);
-  const gun = el('div', 'wgun'); gun.append(el('b', null, `${total}/36`), document.createTextNode(`gun mile · ${verdict(total)[1]}`));
-  frame.append(gun);
-
-  let muhurat = 'Jab dono online hon';
-  if (a.peak !== null && b.peak !== null) {
-    let h = Math.round((a.peak + b.peak) / 2);
-    if (hourDiff(a.peak, b.peak) !== Math.abs(a.peak - b.peak)) h = (h + 12) % 24; // average across midnight
-    muhurat = `${a.lateFri || b.lateFri ? 'Friday' : 'Tuesday'}, ${fmtHour(h)}`;
-  }
-  const det = el('div', 'wdet');
-  [['Muhurat', muhurat], ['Venue', 'main branch, GitHub'], ['Baraat', `${a.own + b.own} repos ke saath`],
-   ['Dress code', 'Dark mode only'], ['Khana', 'Chai aur Maggi, unlimited'], ['RSVP', 'Open a PR']].forEach(([k, v]) => {
-    const d = el('div', null, v); d.prepend(el('small', null, k)); det.append(d);
-  });
-  frame.append(det);
-  const wm = watermark('apna soulmate dhoondo'); wm.style.marginTop = '12px'; frame.append(wm);
-  return card;
-}
-
-const sleep = ms => new Promise(r => setTimeout(r, ms));
-
-// slot-machine style shuffle through the pool, landing on the soulmate
-async function reveal(stage, pool, winner) {
-  const box = el('div', 'reveal');
-  box.append(el('div', 'rv-t', `Pandit ji ${pool.length} developers ki kundli mila rahe hain`), el('div', 'rv-s', 'har ek ke saath 36 gun check ho rahe hain'));
-  const ring = el('div', 'ring'); const img = avatar(winner.avatar, 200); ring.append(img);
-  const nm = el('b'); box.append(ring, nm);
-  stage.innerHTML = ''; stage.append(box);
-  const srcs = pool.map(p => p.avatar + (p.avatar.includes('?') ? '&' : '?') + 's=200');
-  srcs.forEach(s => { const i = new Image(); i.src = s; });
-  let delay = 55, i = 0;
-  const end = performance.now() + 2600;
-  while (performance.now() < end) {
-    const k = i++ % pool.length;
-    img.src = srcs[k]; nm.textContent = pool[k].name;
-    if (playable()) slap(ac.currentTime, 0.05);
-    await sleep(delay); delay *= 1.09;
-  }
-  img.src = winner.avatar + (winner.avatar.includes('?') ? '&' : '?') + 's=200';
-  nm.textContent = winner.name;
-  box.querySelector('.rv-t').textContent = 'Rishta mil gaya!';
-  box.querySelector('.rv-s').textContent = '';
-  box.classList.add('won');
-  await sleep(1000);
-}
-
-// best "rishta" among the snapshot of well-known devs
-function suggestions(d) {
-  return Object.keys(SNAP)
-    .filter(k => k !== d.login.toLowerCase() && k !== CREATOR)
-    .map(k => { const other = analyze(SNAP[k].user, SNAP[k].repos, []); return { other, total: kundli(d, other).total }; })
-    .sort((x, y) => y.total - x.total || y.other.followers - x.other.followers);
-}
-
-/* ---------- export + sharing ---------- */
-function waitImages(node) {
-  return Promise.all([...node.querySelectorAll('img')].map(i => i.complete ? 0 : new Promise(r => { i.onload = i.onerror = r; })));
-}
-
-let fontCSS = null; // embedded once, reused for every export
-async function renderPng(card) {
-  const ex = el('div', 'export');
-  const clone = card.cloneNode(true);
-  ex.append(clone);
-  const foot = el('div', 'exfoot'); foot.append(document.createTextNode('apna banao →'), el('b', null, SITE.replace(/\/$/, '')));
-  ex.append(foot);
-  document.body.append(ex);
-  const w = clone.classList.contains('wcard') ? 840 : 640;
-  ex.style.width = w + 'px';
-  await waitImages(ex);
-  try {
-    if (!fontCSS) fontCSS = await htmlToImage.getFontEmbedCSS(ex);
-    return await htmlToImage.toPng(ex, { pixelRatio: 2, width: w, height: ex.offsetHeight, fontEmbedCSS: fontCSS, style: { opacity: '1', position: 'relative', zIndex: 'auto' } });
-  } finally { ex.remove(); }
-}
-const toBlob = url => fetch(url).then(r => r.blob());
-
-function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('on'), 2200); }
-
-function actions(card, file, xText, waText) {
-  const row = el('div', 'actions');
-  const btn = (label, cls, fn) => { const b = el('button', cls, label); b.onclick = async () => { const o = b.textContent; b.textContent = '...'; try { await fn(); } catch (e) { toast('Nahi hua, screenshot le lo'); } b.textContent = o; }; row.append(b); };
-  btn('⬇ Download', '', async () => {
-    const a = document.createElement('a'); a.href = await renderPng(card); a.download = file; a.click();
-  });
-  if (window.ClipboardItem && navigator.clipboard && navigator.clipboard.write) {
-    btn('Copy image', '', async () => {
-      await navigator.clipboard.write([new ClipboardItem({ 'image/png': renderPng(card).then(toBlob) })]);
-      toast('Copied. X pe paste kar do');
-    });
-  }
-  btn('Share on X', 'x', async () => { window.open('https://x.com/intent/post?text=' + encodeURIComponent(xText), '_blank', 'noopener'); });
-  btn('Family group mein bhejo', 'wa', async () => {
-    const f = new File([await toBlob(await renderPng(card))], file, { type: 'image/png' });
-    if (navigator.canShare && navigator.canShare({ files: [f] })) await navigator.share({ files: [f], text: waText });
-    else window.open('https://wa.me/?text=' + encodeURIComponent(waText), '_blank', 'noopener');
-  });
-  return row;
-}
-
-function pageUrl(u, m) {
-  const q = new URLSearchParams({ u }); if (m) q.set('m', m);
-  return `https://${SITE.replace(/\/$/, '')}?${q}`;
-}
-
-/* ---------- celebration: petals, stamp thud, dhol ---------- */
-let soundOn = true;
-try { soundOn = localStorage.getItem('gr-sound') !== 'off'; } catch (e) {}
-let ac = null;
-function unlockAudio() {
-  try {
-    if (!ac) ac = new (window.AudioContext || window.webkitAudioContext)();
-    if (ac.state === 'suspended') ac.resume();
-  } catch (e) {}
-}
-function drum(t, f0, f1, dur, gain) {
-  const o = ac.createOscillator(), g = ac.createGain();
-  o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f1, t + dur);
-  g.gain.setValueAtTime(gain, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
-  o.connect(g).connect(ac.destination); o.start(t); o.stop(t + dur);
-}
-function slap(t, gain) {
-  const len = Math.floor(ac.sampleRate * 0.08), buf = ac.createBuffer(1, len, ac.sampleRate), ch = buf.getChannelData(0);
-  for (let i = 0; i < len; i++) ch[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3);
-  const src = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain();
-  src.buffer = buf; f.type = 'bandpass'; f.frequency.value = 2200; f.Q.value = 0.8; g.gain.value = gain;
-  src.connect(f).connect(g).connect(ac.destination); src.start(t);
-  drum(t, 420, 300, 0.07, gain * 0.5);
-}
-function playable() { return soundOn && ac && ac.state === 'running'; }
-function thud() { if (!playable()) return; const t = ac.currentTime; drum(t, 160, 38, 0.4, 0.9); slap(t, 0.25); }
-function dhol() {
-  if (!playable()) return;
-  const t0 = ac.currentTime + 0.05, step = 60 / 150 / 2; // bhangra-ish 8ths at 150 bpm
-  const bar = ['B', 'S', '', 'S', 'B', 'S', 'B', 'S'];
-  for (let r = 0; r < 3; r++) bar.forEach((x, i) => {
-    const t = t0 + (r * 8 + i) * step;
-    if (x === 'B') { drum(t, 130, 52, 0.32, 0.8); slap(t, 0.12); }
-    if (x === 'S') slap(t, 0.32);
-  });
-  drum(t0 + 24 * step, 140, 45, 0.6, 1); slap(t0 + 24 * step, 0.4);
-}
-function petals(n) {
-  const box = el('div', 'petals'); document.body.append(box);
-  const colors = ['#f59e0b', '#ea580c', '#fbbf24', '#f97316', '#e11d48', '#fde68a'];
-  for (let i = 0; i < n; i++) {
-    const p = el('i'), s = 8 + Math.random() * 12;
-    p.style.cssText = `left:${Math.random() * 100}vw;width:${s}px;height:${s * 0.8}px;background:${colors[i % colors.length]};` +
-      `animation-duration:${3 + Math.random() * 3.5}s;animation-delay:${Math.random() * 1.2}s;--dx:${(Math.random() - 0.5) * 240}px;--r:${Math.random() * 900 - 450}deg`;
-    box.append(p);
-  }
-  setTimeout(() => box.remove(), 8500);
-}
-let fxTimers = [];
-function celebrate(total, revealed) {
-  fxTimers.forEach(clearTimeout); fxTimers = [];
-  if (revealed) {
-    if (total >= 25) { petals(total >= 32 ? 160 : 100); dhol(); }
-    else if (total >= 18) { petals(35); thud(); }
-    else thud();
-    return;
-  }
-  fxTimers.push(setTimeout(() => thud(), 1450));
-  if (total == null) return;
-  if (total >= 25) fxTimers.push(setTimeout(() => { petals(total >= 32 ? 160 : 90); dhol(); }, 1650));
-  else if (total >= 18) fxTimers.push(setTimeout(() => petals(30), 1650));
-}
-
-const sndBtn = el('button', 'snd', soundOn ? '🔊' : '🔇');
-sndBtn.title = 'sound';
-sndBtn.onclick = () => {
-  soundOn = !soundOn; sndBtn.textContent = soundOn ? '🔊' : '🔇';
-  try { localStorage.setItem('gr-sound', soundOn ? 'on' : 'off'); } catch (e) {}
-  if (soundOn) unlockAudio();
-};
-document.body.append(sndBtn);
-
-const STEPS = ['Pandit ji GitHub khol rahe hain', 'Repos gin rahe hain', 'Commit ka time dekh ke rashi nikal rahe hain', 'Stars se kad naap rahe hain', '36 gun mila rahe hain'];
-
-async function run(u, m) {
-  const err = document.getElementById('err'), stage = document.getElementById('stage'), more = document.getElementById('more');
-  err.textContent = ''; more.innerHTML = '';
-  stage.innerHTML = '<div class="loading"><b></b><span>ek minute, kundli ban rahi hai</span></div>';
-  let i = 0; const lb = stage.querySelector('b'); lb.textContent = STEPS[0] + '...';
-  const tick = setInterval(() => { i = Math.min(i + 1, STEPS.length - 1); lb.textContent = STEPS[i] + '...'; }, 420);
-  const minWait = new Promise(r => setTimeout(r, m ? 1700 : 1000));
-  try {
-    const a = await load(u);
-    const sugg = suggestions(a);
-    const top = sugg[0] || null;
-    const b = m ? await load(m) : (top && top.other);
-    await minWait;
-    clearInterval(tick);
-    if (!m && top) await reveal(stage, sugg.map(s => s.other), top.other);
-    stage.innerHTML = '';
-    if (b) {
-      const solo = el('div', 'solo'); const total = kundli(a, b).total; const wc = weddingCard(a, b, total);
-      const urlW = pageUrl(a.login, m ? b.login : '');
-      solo.append(wc, actions(wc, `shaadi-${a.login}-${b.login}.png`,
-        `github ne mera rishta pakka kar diya 😭\n\n${a.name} weds ${b.name}, ${total}/36 gun mile\n\napna soulmate dhoondo: ${urlW}`,
-        `Mummy rishta pakka 😭 ${a.name} weds ${b.name}, ${total}/36 gun mile. ${urlW}`));
-      stage.append(solo);
-    }
-    const c1 = el('div', 'col'); const bio = biodataCard(a, top);
-    const url1 = pageUrl(a.login);
-    const brag = top ? `rishta aaya hai ${top.other.name} ka, ${top.total}/36 😭` : '';
-    c1.append(bio, actions(bio, `biodata-${a.login}.png`,
-      `meri github ka rishta biodata ban gaya 😭 ${brag}\n\napna banao: ${url1}`,
-      `Mummy ye dekho mera biodata 😭 ${brag} ${url1}`));
-    stage.append(c1);
-    let kTotal = null;
-    if (b) {
-      const c2 = el('div', 'col'); const { card, total } = kundliCard(a, b);
-      kTotal = total;
-      const url2 = pageUrl(a.login, b.login);
-      c2.append(card, actions(card, `kundli-${a.login}-${b.login}.png`,
-        `meri aur @${b.twitter || b.login} ki kundli milayi. ${total}/36, ${verdict(total)[1].toLowerCase()} 😭\n\napni milao: ${url2}`,
-        `Kundli mil gayi 😭 ${total}/36 ${url2}`));
-      stage.append(c2);
-    }
-    celebrate(kTotal, !m);
-    if (sugg.length > 1) {
-      const wrap = el('div', 'more'); wrap.append(el('h4', null, 'Aur rishte aaye hain'));
-      const chips = el('div', 'chips');
-      const worst = sugg[sugg.length - 1];
-      sugg.slice(1, 12).concat(sugg.length > 12 ? [worst] : []).forEach(s => {
-        const c = el('button', 'chip'); c.append(avatar(s.other.avatar, 56), document.createTextNode(s.other.name + ' '), el('em', null, `${s.total}/36`));
-        c.onclick = () => { unlockAudio(); document.getElementById('m').value = s.other.login; run(a.login, s.other.login); scrollTo({ top: 0, behavior: 'smooth' }); };
-        if (s === worst) { c.title = 'Pandit ji ne door rehne bola'; c.style.borderColor = '#e8a3a3'; c.prepend(document.createTextNode('🚫')); }
-        chips.append(c);
-      });
-      wrap.append(chips); more.append(wrap);
-    }
-    history.replaceState(null, '', '?' + new URLSearchParams(m ? { u: a.login, m: b.login } : { u: a.login }));
-  } catch (e) {
-    stage.innerHTML = '';
-    err.textContent = e.message === 'notfound' ? 'Ye username GitHub pe nahi mila' : e.message === 'rate' ? 'GitHub ne thoda rukne bola hai (rate limit). 10 min baad try karo' : 'Kuch gadbad ho gayi, dobara try karo';
-  } finally { clearInterval(tick); }
-}
-
-const clean = s => s.trim().replace(/^@/, '').replace(/^https?:\/\/(www\.)?github\.com\//, '').split(/[/?#]/)[0];
-document.getElementById('f').addEventListener('submit', e => {
-  e.preventDefault();
-  unlockAudio();
-  const u = clean(document.getElementById('u').value), m = clean(document.getElementById('m').value);
-  if (u) run(u, m);
-});
-
-const tryRow = document.getElementById('try');
-tryRow.append('try: ');
-['torvalds', 'karpathy', 'hkirat', 'hiteshchoudhary', 'ThePrimeagen'].filter(x => SNAP[x.toLowerCase()]).forEach(x => {
-  const a = el('a', null, '@' + x); a.onclick = () => { unlockAudio(); document.getElementById('u').value = x; document.getElementById('m').value = ''; run(x); }; tryRow.append(a);
-});
-
-const q = new URLSearchParams(location.search);
-if (q.get('u')) {
-  document.getElementById('u').value = q.get('u');
-  if (q.get('m')) document.getElementById('m').value = q.get('m');
-  run(q.get('u'), q.get('m'));
-}
-</script>
+<script>document.write('<script src="' + GR_BASE + 'app.js"><\/script>');</script>
 </body>
 </html>

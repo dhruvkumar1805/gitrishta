@@ -6,18 +6,18 @@ Type a GitHub username and Pandit ji reads your public profile, makes your risht
 
 1. **Your GitHub circle**: people who follow you back first, then people you follow.
 2. **All of GitHub**: developers with your stack (and country, when there are enough) and a follower count in your league, found through GitHub search.
-3. **The rishta pool**: everyone who has made a biodata and opted in.
+3. **The rishta pool**: other people who made a biodata and opted in. This needs a small backend that isn't included here, so a local copy skips it.
 4. **Celebrities**: a snapshot of well-known developers.
 
 The best kundli match gets a shaadi ka card. It's in English by default, with a Desi (Hinglish) mode one tap away.
 
-**Live:** https://dhruvkumar.dev/gitrishta
+This isn't hosted anywhere right now. Run it locally with the steps below.
 
 ![dan weds Evan You](og.jpg)
 
 ## What it reads
 
-Everything comes from the public GitHub API, in your browser. If you keep "add me to the rishta pool" ticked, a few numbers derived from your public profile (stars, repo count, top languages, the hour you commit most) are kept so other people can match with you. Untick it, or use "remove me from the pool" anytime.
+Everything comes from the public GitHub API, in your browser. A local copy stores nothing: the "add me to the rishta pool" checkbox only does something when the pool backend exists.
 
 | Biodata field | Comes from |
 | --- | --- |
@@ -38,7 +38,7 @@ It's one static page.
 python3 -m http.server 8787
 ```
 
-`famous.js` is a snapshot of public data for the developers in the rishta pool, so suggestions don't use up your GitHub rate limit. Refresh or extend it with:
+`famous.js` is a snapshot of public data for the well-known developers in the celebrity list, so suggestions don't use up your GitHub rate limit. Refresh or extend it with:
 
 ```sh
 node build-famous.mjs torvalds gaearon yyx990803
